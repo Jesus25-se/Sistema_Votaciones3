@@ -1,0 +1,629 @@
+/* === Estilos base === */
+body {
+  background-color: #f4f6f8;
+  margin: 0;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  color: #212529;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* === Navbar === */
+.navbar {
+  background-color: #001f3f !important; /* azul más oscuro para mayor contraste */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  border-bottom: 4px solid rgba(13, 110, 253, 0.08);
+}
+
+.navbar-brand {
+  color: #ffffff !important;
+  transition: color 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.navbar-brand:hover {
+  color: #f8f9fa !important;
+  opacity: 0.92;
+}
+
+.nav-link {
+  color: #f8f9fa !important;
+  transition: color 0.25s ease;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #ffc107 !important;
+  text-decoration: none;
+}
+
+/* === Contenedor general === */
+.container {
+  margin-top: 10px;
+}
+
+/* === Cards generales === */
+.card {
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+}
+
+/* === HERO (sección principal de landing) === */
+.hero-section {
+  background: linear-gradient(90deg, #0b63d6 0%, #003366 100%);
+  color: #ffffff;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.hero-section .hero-title {
+  font-size: 44px;
+  line-height: 1.05;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  margin-bottom: 14px;
+}
+
+.hero-section .hero-sub {
+  color: rgba(255,255,255,0.92);
+  font-size: 18px;
+  max-width: 900px;
+  margin: 0 auto 28px;
+}
+
+/* Botón del hero: fondo oscuro y texto claro para alto contraste */
+.hero-btn {
+  background-color: #001f3f;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 26px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,31,63,0.25);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.hero-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,31,63,0.32);
+  background-color: #003366;
+}
+
+/* Botón outline en hero (acceso admin) */
+.hero-outline {
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #ffffff;
+  padding: 10px 20px;
+}
+
+/* === Secciones y títulos === */
+.section-title {
+  color: #002b5c;
+  font-weight: 700;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+/* === Cómo funciona (cards) === */
+.card.how-card {
+  border: 1px solid #e6eef5;
+  background-color: #ffffff;
+  box-shadow: 0 6px 18px rgba(2,27,50,0.04);
+  border-radius: 10px;
+  padding: 22px;
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card.how-card h5 {
+  color: #003366;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.card.how-card p {
+  color: #495057;
+  margin-bottom: 0.25rem;
+}
+
+/* Accent bar left for each card (visual serio) */
+.how-card-accent {
+  display: block;
+  height: 6px;
+  width: 64px;
+  background: linear-gradient(90deg, #0d6efd 0%, #003366 100%);
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+/* === Boleta de votación === */
+.boleta-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* === Tarjeta del partido === */
+.partido-card {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  border: 2px solid #e0e0e0;
+  background-color: #fdfdfd;
+  border-radius: 10px;
+  overflow: hidden;
+  padding-top: 8px;
+  padding-bottom: 12px;
+}
+
+.partido-card:hover {
+  transform: translateY(-4px);
+  border-color: #003366;
+  box-shadow: 0 6px 14px rgba(0, 51, 102, 0.18);
+}
+
+.partido-card.selected {
+  border: 2px solid #003366 !important;
+  background-color: #e6eef9 !important;
+  box-shadow: 0 0 12px rgba(0, 51, 102, 0.35);
+  transform: scale(1.03);
+}
+
+/* Logo del partido */
+.partido-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* === Sidebar (Admin Dashboard) === */
+.bg-dark {
+  background-color: #1b1f23 !important;
+}
+
+.bg-dark .nav-link {
+  color: #adb5bd !important;
+  transition: all 0.2s ease;
+}
+
+.bg-dark .nav-link:hover {
+  color: #ffffff !important;
+  transform: translateX(4px);
+}
+
+.bg-dark h4 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #f8f9fa;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 8px;
+}
+
+/*
+ * --------------------------------
+ * CSS para AdminSidebar
+ * --------------------------------
+ */
+
+/* Estilo base para todos los enlaces (hover predeterminado) */
+.default-link-hover:hover {
+  background-color: rgba(0, 123, 255, 0.08) !important; /* Un azul muy suave en hover */
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Base de los enlaces activos */
+.active-link {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease;
+}
+
+/* Estilos Específicos para Enlaces Activos */
+
+/* Panel de Control (Primary - Azul) */
+.active-link-primary {
+  background-color: rgba(0, 123, 255, 0.15) !important;
+  border: 1px solid rgba(0, 123, 255, 0.3) !important;
+}
+.active-link-primary:hover {
+  background-color: rgba(0, 123, 255, 0.3) !important;
+}
+
+/* Cargar Datos (Success - Verde) */
+.active-link-success {
+  background-color: rgba(40, 167, 69, 0.15) !important;
+  border: 1px solid rgba(40, 167, 69, 0.3) !important;
+}
+.active-link-success:hover {
+  background-color: rgba(40, 167, 69, 0.3) !important;
+}
+
+/* Limpieza de Datos (Secondary - Gris) */
+.active-link-secondary {
+  background-color: rgba(108, 117, 125, 0.15) !important;
+  border: 1px solid rgba(108, 117, 125, 0.3) !important;
+}
+.active-link-secondary:hover {
+  background-color: rgba(108, 117, 125, 0.3) !important;
+}
+
+/* Análisis Predictivo (Warning - Amarillo) */
+.active-link-warning {
+  background-color: rgba(255, 193, 7, 0.15) !important;
+  border: 1px solid rgba(255, 193, 7, 0.3) !important;
+}
+.active-link-warning:hover {
+  background-color: rgba(255, 193, 7, 0.3) !important;
+}
+
+/* Botón de Votaciones (Sección Resultados) */
+.votaciones-btn {
+  background-color: rgba(0, 123, 255, 0.15) !important;
+  border: 1px solid rgba(0, 123, 255, 0.3) !important;
+  color: #fff !important;
+  transition: all 0.3s ease;
+}
+.votaciones-btn:hover {
+  background-color: rgba(0, 123, 255, 0.3) !important;
+  color: #fff !important;
+}
+
+/* Botón Cerrar Sesión (Footer) */
+.log-out-btn {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease;
+}
+.log-out-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+/* Sidebar small adjustments */
+aside.bg-dark {
+  min-height: 100vh;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+/* === Botones === */
+.btn {
+  transition: all 0.25s ease;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #003366 !important;
+  border-color: #003366 !important;
+}
+
+.btn-primary:hover {
+  background-color: #004080 !important;
+  border-color: #004080 !important;
+}
+
+.btn-outline-primary {
+  color: #003366 !important;
+  border-color: #003366 !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #003366 !important;
+  color: #ffffff !important;
+}
+
+.btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* === Form inputs focus === */
+.form-control:focus {
+  box-shadow: 0 0 0 0.15rem rgba(0, 51, 102, 0.12);
+  border-color: #003366;
+}
+
+/* === Footer === */
+.site-footer {
+  background-color: #001f3f;
+  color: rgba(255,255,255,0.92);
+  padding: 24px 0;
+  text-align: center;
+}
+
+/* Footer links */
+.site-footer a {
+  color: #ffffff;
+  opacity: 0.92;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: #ffc107;
+  text-decoration: underline;
+}
+
+/* === Titulares === */
+h1, h2, h3, h4, h5 {
+  color: #002b5c;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* === Utilities y responsive tweaks === */
+.text-primary {
+  color: #003366 !important;
+}
+
+@media (max-width: 992px) {
+  .hero-section { padding: 56px 0; }
+  .hero-section .hero-title { font-size: 28px; }
+  .hero-section .hero-sub { font-size: 15px; padding: 0 12px; }
+  .container { margin-top: 24px; }
+  .partido-logo { width: 75px; height: 75px; }
+}
+
+@media (max-width: 576px) {
+  .container { margin-top: 18px; padding-left: 12px; padding-right: 12px; }
+  .card.how-card { min-height: auto; padding: 16px; }
+  .hero-section .hero-title { font-size: 22px; }
+}
+
+.hero-section {
+    /* ... degradado ... */
+    background-image: linear-gradient(90deg, rgba(11, 99, 214, 0.8) 0%, rgba(0, 51, 102, 0.8) 100%), 
+                      /* ✅ CORRECCIÓN: Usar solo la URL absoluta */
+                      url('https://www.onpe.gob.pe/politica-privacidad-tratamiento-datos-personales/images/img1.png'); 
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    /* ... */
+}
+/* === Preguntas Frecuentes Cards (Nuevo Estilo) === */
+.faq-card {
+    /* Estilo para que el recuadro se vea sólido */
+    border: 1px solid #e6eef5;
+    background-color: #ffffff;
+    box-shadow: 0 6px 18px rgba(2,27,50,0.04);
+    transition: transform 0.25s ease;
+}
+
+.faq-card:hover {
+    /* Efecto al pasar el mouse */
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 51, 102, 0.15);
+}
+
+.faq-image {
+    /* Tamaño y estilo para la imagen referencial */
+    width: 60px; /* Tamaño del icono/imagen */
+    height: 60px;
+    object-fit: contain;
+}
+
+.faq-question {
+    /* Estilo de la pregunta */
+    font-size: 1.05rem;
+    color: #003366; /* Azul fuerte */
+    font-weight: 700 !important;
+}
+
+.faq-answer {
+    /* Estilo de la respuesta */
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+/* Estilo para la sección completa si quieres un fondo diferente */
+.faqs-section {
+    background-color: #f4f6f8; /* Un fondo gris claro para diferenciar la sección */
+}
+
+/* === Estilos personalizados para el Acordeón de FAQ === */
+.faq-item-custom {
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #003366 !important; /* Color azul fuerte al estar abierto */
+    background-color: #f0f7ff !important; /* Fondo azul claro */
+    box-shadow: none !important;
+}
+
+.accordion-button {
+    padding: 1rem 1.25rem;
+    font-size: 1.05rem;
+}
+
+.accordion-button:focus {
+    border-color: #003366 !important;
+    box-shadow: 0 0 0 0.15rem rgba(0, 51, 102, 0.12) !important;
+}
+/* ========================================================================= */
+/* === MODIFICACIONES CLAVE PARA LA IMAGEN DE FONDO (SOLUCIÓN NUCLEAR) === */
+/* ========================================================================= */
+
+/* ✅ CLASE PARA SECCIÓN CON IMAGEN: "¿Cómo funciona el sistema?" */
+.bg-como-funciona {
+    /* 1. Definir el fondo con imagen y opacidad blanca */
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.85) 100%),
+                      url('https://upload.wikimedia.org/wikipedia/commons/4/4f/Oficina_Nacional_de_Procesos_Electorales.JPG') !important;
+    
+    background-size: cover !important; 
+    background-position: center !important;
+    background-attachment: fixed !important; 
+    
+    /* 2. CRÍTICO: La sección principal debe ser transparente */
+    background-color: transparent !important;
+    
+    /* 3. ¡Nuevo! Asegura que la sección y sus elementos internos no usen el fondo blanco del body/app. */
+    isolation: isolate; 
+}
+
+/* 🚨 SOLUCIÓN NUCLEAR: Forzar la transparencia en el div wrapper, el contenedor de Bootstrap y sus filas. */
+/* Usamos el selector ">" para alta especificidad */
+.bg-como-funciona > .como-funciona-content,
+.bg-como-funciona > .como-funciona-content > .container,
+.bg-como-funciona > .como-funciona-content > .container > .row,
+.bg-como-funciona .como-funciona-content > .container > h2, /* Asegura que el título no tenga fondo blanco */
+.bg-como-funciona .como-funciona-content > .container > .row > div {
+    background-color: transparent !important;
+}
+
+
+/* ✅ CLASE PARA SECCIÓN SIN IMAGEN: "Seguridad y Transparencia" */
+.custom-background-image {
+    background-color: transparent !important; 
+    background-image: none !important; 
+    background-attachment: initial !important; 
+    background-size: initial !important; 
+}
+
+
+/* 🚨 REGLA CLAVE: Forzar las tarjetas (cards) y sus cuerpos a ser BLANCOS SÓLIDOS */
+.bg-como-funciona .card,
+.bg-como-funciona .card-body,
+.custom-background-image .card,
+.custom-background-image .card-body,
+.process-step-card {
+    background-color: #FFFFFF !important; /* BLANCO SÓLIDO */
+    border: 1px solid #e6eef5 !important; 
+    box-shadow: 0 6px 18px rgba(2,27,50,0.08) !important; 
+}
+/* ========================================================================= */
+/* Para las tarjetas de proceso */
+.process-step-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+}
+
+/* Animación al pasar el ratón */
+.process-step-card:hover {
+    transform: translateY(-5px) scale(1.03); /* Se mueve un poco hacia arriba y agranda */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important; /* Sombra más pronunciada */
+}
+
+/* Ajustes de imagen */
+.process-image {
+    transition: transform 0.3s ease;
+}
+
+.process-step-card:hover .process-image {
+    transform: scale(1.05); /* Ligeramente más grande */
+}
+/* Ajusta el padding-top de tu body o contenedor principal */
+/* Colores Pastel y Estilo Moderno para react-toastify */
+
+/* Estilo base para todos los toasts: bordes redondeados y texto oscuro */
+.Toastify__toast {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+  /* El color del texto base cambia para que sea legible sobre el fondo claro */
+  color: #333; 
+}
+
+/* Éxito (Verde Menta Pastel) */
+.Toastify__toast--success {
+  background-color: #e8f9e8 !important; /* Menta muy claro */
+  border-left: 5px solid #6cbe6c !important; /* Borde sutil verde */
+}
+
+/* Error (Rosado Coral Pastel) */
+.Toastify__toast--error {
+  background-color: #fce8e8 !important; /* Rosa/Coral muy claro */
+  border-left: 5px solid #d9534f !important; /* Borde sutil rojo */
+}
+
+/* Información (Azul Cielo Pastel) */
+.Toastify__toast--info {
+  background-color: #e8f5fc !important; /* Azul cielo muy claro */
+  border-left: 5px solid #5bc0de !important; /* Borde sutil azul */
+}
+
+/* Ajuste para el texto dentro del toast, asegurando contraste */
+.Toastify__toast-body {
+    color: #333 !important;
+}
+/* ========================================================= */
+/* 🚀 CORRECCIÓN CLAVE: BLOQUEAR SCROLL DE FONDO EN AMBOS EJES */
+/* ========================================================= */
+
+.modal-open {
+    overflow: hidden !important; 
+}
+
+/* ========================================================= */
+/* 1. ANIMACIÓN DE ENTRADA DEL MODAL COMPLETO (BASE) */
+/* ========================================================= */
+@keyframes modal-slide-in-up {
+    from {
+        opacity: 0;
+        transform: translate(0, 50px); 
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+.modal.show .modal-dialog {
+    transition: none; 
+    animation: modal-slide-in-up 0.4s ease-out forwards;
+}
+
+.modal .modal-dialog {
+    opacity: 0;
+    transform: translate(0, 50px);
+}
+
+/* ========================================================= */
+/* 2. ANIMACIONES DE CONTENIDO INTERNO (VERTICALES) */
+/* ========================================================= */
+
+@keyframes slide-in-down {
+    from { 
+        opacity: 0; 
+        transform: translateY(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Clase base para ocultar elementos al inicio */
+.animated-content {
+    opacity: 0; 
+}
+
+/* Clases para aplicar las animaciones con el retraso escalonado */
+.modal.show .animate__slide-left, 
+.modal.show .animate__slide-right {
+    animation: slide-in-down 0.6s ease-out forwards;
+    /* Diferentes delays para el efecto escalonado */
+    animation-delay: 0.3s; 
+}
+
+.modal.show .animate__slide-right {
+    animation-delay: 0.5s; 
+}
+
+.modal.show .animate__fade-in-footer {
+    animation: modal-slide-in-up 0.4s ease-out forwards;
+    animation-delay: 0.6s; 
+}
