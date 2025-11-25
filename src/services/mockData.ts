@@ -54,6 +54,8 @@ export const nombresSimulados: Record<string, UsuarioSimulado> = {
   "87654321": { nombres: "María Fernanda", apellidos: "López Díaz", departamento: "Arequipa", fechaNacimiento: "1992-11-20"}, // 🚀 AÑADIDO
   "11112222": { nombres: "Pedro José", apellidos: "Ramírez Torres", departamento: "Cuzco", fechaNacimiento: "2000-01-01" }, // 🚀 AÑADIDO
   "60921146": { nombres: "Jordy Joseph", apellidos: " Aguilar Melgar", departamento: "Lima", fechaNacimiento: "2007-01-07" }, // 🚀 AÑADIDO  
+  "70594604": { nombres: "Sebastian Alejandro", apellidos: " Cordova Norabuena", departamento: "Lima", fechaNacimiento: "2006-12-23" }, // 🚀 AÑADIDO
+  "987207357": { nombres: "Jesus Isaias", apellidos: "Arquero Arburua", departamento: "Lima", fechaNacimiento: "2005-06-20" }, // 🚀 AÑADIDO
 };
 
 // 🗳️ Partidos simulados (con candidatos + fotos por categoría)
