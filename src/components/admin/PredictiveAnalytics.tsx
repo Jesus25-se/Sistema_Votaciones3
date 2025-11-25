@@ -306,65 +306,129 @@ export default function PredictiveAnalytics({ lastTraining }: PredictiveAnalytic
         </div>
       </div>
 
-      {/* Gráficos Estadísticos Simples */}
+      {/* Gráficos Estadísticos Mejorados */}
       <div className="row mb-4">
         <div className="col-12">
           <div className="card border-0 shadow-sm">
             <div className="card-header bg-white border-0">
               <h5 className="fw-semibold text-dark mb-0">
                 <i className="bi bi-bar-chart text-primary me-2" />
-                Gráficos Predictivo
+                Gráficos Predictivos
               </h5>
             </div>
             <div className="card-body">
               <div className="row g-3">
-                {/* Gráfico 1: Barras - Participación por hora */}
+                {/* Gráfico 1: Línea - Tendencias de participación */}
                 <div className="col-md-6">
-                  <div className="card border-0 bg-light">
-                    <div className="card-body">
-                      <h6 className="fw-semibold">Participación por Hora</h6>
-                      <div className="d-flex align-items-end gap-2 mt-3" style={{height: "120px"}}>
-                        {[25, 45, 65, 80, 70, 60].map((value, i) => (
-                          <div key={i} className="flex-fill d-flex flex-column align-items-center">
-                            <div 
-                              className="bg-primary rounded w-100"
-                              style={{height: `${value}%`}}
+                  <div className="card border-0 bg-light h-100">
+                    <div className="card-body d-flex flex-column">
+                      <h6 className="fw-semibold">Tendencia de Participación</h6>
+                      <div className="flex-grow-1 d-flex align-items-center justify-content-center">
+                        <div className="position-relative w-100" style={{height: "180px"}}>
+                          <svg viewBox="0 0 350 160" className="w-100 h-100">
+                            {/* Eje Y */}
+                            <line x1="30" y1="10" x2="30" y2="140" stroke="#dee2e6" strokeWidth="1.5" />
+                            
+                            {/* Eje X */}
+                            <line x1="30" y1="140" x2="330" y2="140" stroke="#dee2e6" strokeWidth="1.5" />
+                            
+                            {/* Líneas horizontales de guía */}
+                            <line x1="30" y1="30" x2="330" y2="30" stroke="#e9ecef" strokeWidth="1" />
+                            <line x1="30" y1="60" x2="330" y2="60" stroke="#e9ecef" strokeWidth="1" />
+                            <line x1="30" y1="90" x2="330" y2="90" stroke="#e9ecef" strokeWidth="1" />
+                            <line x1="30" y1="110" x2="330" y2="110" stroke="#e9ecef" strokeWidth="1" />
+                            
+                            {/* Línea de tendencia principal - más horizontal */}
+                            <polyline 
+                              points="50,130 90,120 130,100 170,80 210,70 250,60 290,50 320,40" 
+                              fill="none" 
+                              stroke="#0d6efd" 
+                              strokeWidth="3"
+                              strokeLinecap="round"
                             />
-                            <small className="text-muted mt-1">{["08", "10", "12", "14", "16", "18"][i]}:00</small>
-                          </div>
-                        ))}
+                            
+                            {/* Puntos de datos */}
+                            <circle cx="50" cy="130" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            <circle cx="90" cy="120" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            <circle cx="130" cy="100" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            <circle cx="170" cy="80" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            <circle cx="210" cy="70" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            <circle cx="250" cy="60" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            <circle cx="290" cy="50" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            <circle cx="320" cy="40" r="3.5" fill="#0d6efd" stroke="#fff" strokeWidth="1" />
+                            
+                            {/* Etiquetas del eje X */}
+                            <text x="50" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">08:00</text>
+                            <text x="90" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">10:00</text>
+                            <text x="130" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">12:00</text>
+                            <text x="170" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">14:00</text>
+                            <text x="210" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">16:00</text>
+                            <text x="250" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">18:00</text>
+                            <text x="290" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">20:00</text>
+                            <text x="320" y="155" textAnchor="middle" fontSize="9" fill="#6c757d" fontWeight="500">22:00</text>
+                            
+                            {/* Etiquetas del eje Y */}
+                            <text x="25" y="35" textAnchor="end" fontSize="9" fill="#6c757d" fontWeight="500">80%</text>
+                            <text x="25" y="65" textAnchor="end" fontSize="9" fill="#6c757d" fontWeight="500">60%</text>
+                            <text x="25" y="95" textAnchor="end" fontSize="9" fill="#6c757d" fontWeight="500">40%</text>
+                            <text x="25" y="115" textAnchor="end" fontSize="9" fill="#6c757d" fontWeight="500">20%</text>
+                            <text x="25" y="145" textAnchor="end" fontSize="9" fill="#6c757d" fontWeight="500">0%</text>
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="text-center mt-2">
+                        <small className="text-muted">Horas del día</small>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                {/* Gráfico 2: Distribución de votos */}
+                {/* Gráfico 2: Circular - Distribución de votos */}
                 <div className="col-md-6">
-                  <div className="card border-0 bg-light">
+                  <div className="card border-0 bg-light h-100">
                     <div className="card-body">
                       <h6 className="fw-semibold">Distribución de Votos</h6>
-                      <div className="d-flex align-items-center mt-3">
+                      <div className="d-flex align-items-center justify-content-center mt-3">
+                        <div className="position-relative me-4">
+                          {/* Gráfico circular SVG */}
+                          <svg width="120" height="120" viewBox="0 0 42 42">
+                            {/* Alianza Progreso - 34% */}
+                            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#0d6efd" strokeWidth="3"
+                                    strokeDasharray="34 66" strokeDashoffset="25" />
+                            {/* Frente Democrático - 28% */}
+                            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#198754" strokeWidth="3"
+                                    strokeDasharray="28 72" strokeDashoffset="-34" />
+                            {/* Unidad Nacional - 19% */}
+                            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ffc107" strokeWidth="3"
+                                    strokeDasharray="19 81" strokeDashoffset="-62" />
+                            {/* Otros - 19% */}
+                            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#6c757d" strokeWidth="3"
+                                    strokeDasharray="19 81" strokeDashoffset="-81" />
+                            <text x="21" y="21" textAnchor="middle" dy="0.3em" fontSize="8" fontWeight="bold">
+                              Total
+                            </text>
+                          </svg>
+                        </div>
                         <div className="flex-fill">
-                          {["Alianza Progreso", "Frente Democrático", "Unidad Nacional"].map((party, i) => (
+                          {[
+                            { party: "Alianza Progreso", percentage: 34, color: "#0d6efd" },
+                            { party: "Frente Democrático", percentage: 28, color: "#198754" },
+                            { party: "Unidad Nacional", percentage: 19, color: "#ffc107" },
+                            { party: "Otros", percentage: 19, color: "#6c757d" }
+                          ].map((item, i) => (
                             <div key={i} className="d-flex align-items-center mb-2">
                               <div 
                                 className="rounded me-2"
                                 style={{
                                   width: "12px",
                                   height: "12px",
-                                  backgroundColor: ["#0d6efd", "#198754", "#ffc107"][i]
+                                  backgroundColor: item.color
                                 }}
                               />
-                              <small className="text-muted">{party}</small>
-                              <small className="fw-bold ms-auto">{[34, 28, 19][i]}%</small>
+                              <small className="text-muted flex-fill">{item.party}</small>
+                              <small className="fw-bold">{item.percentage}%</small>
                             </div>
                           ))}
-                        </div>
-                        <div className="ms-4">
-                          <div 
-                            className="rounded-circle border border-3 border-primary"
-                            style={{width: "80px", height: "80px"}}
-                          />
                         </div>
                       </div>
                     </div>
@@ -389,86 +453,7 @@ export default function PredictiveAnalytics({ lastTraining }: PredictiveAnalytic
           </div>
         </div>
       </div>
-
-      {/* Análisis de Tendencia */}
-      <div className="row">
-        <div className="col-12">
-          <div className="card border-0 shadow-sm">
-            <div className="card-header bg-white border-0 py-3">
-              <h5 className="fw-semibold text-dark mb-0">
-                <i className="bi bi-graph-up text-primary me-2" />
-                Análisis Detallado de Tendencias
-              </h5>
-            </div>
-            <div className="card-body">
-              <div className="row mb-4">
-                <div className="col-md-6">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <h6 className="fw-semibold text-dark mb-0">Proyección de Participación</h6>
-                    <span className="badge bg-success bg-opacity-10 text-success">65% Estimado</span>
-                  </div>
-                  <div className="progress mb-3" style={{ height: "12px" }}>
-                    <div 
-                      className="progress-bar bg-success" 
-                      style={{ width: "65%" }}
-                    />
-                  </div>
-                  <small className="text-muted">
-                    Basado en análisis de patrones históricos y tasa de participación actual
-                  </small>
-                </div>
-                <div className="col-md-6">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <h6 className="fw-semibold text-dark mb-0">Fiabilidad del Modelo</h6>
-                    <span className="badge bg-primary bg-opacity-10 text-primary">78% Confianza</span>
-                  </div>
-                  <div className="progress mb-3" style={{ height: "12px" }}>
-                    <div 
-                      className="progress-bar bg-primary" 
-                      style={{ width: "78%" }}
-                    />
-                  </div>
-                  <small className="text-muted">
-                    Modelo entrenado con 50,000+ registros históricos validados
-                  </small>
-                </div>
-              </div>
-              
-              <div className="row">
-                <div className="col-12">
-                  <h6 className="fw-semibold text-dark mb-3">Insights del Sistema Predictivo</h6>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <ul className="list-unstyled">
-                        <li className="mb-2">
-                          <i className="bi bi-check-circle-fill text-success me-2" />
-                          <strong>Pico de participación</strong> proyectado entre 10:00 - 12:00 horas
-                        </li>
-                        <li className="mb-2">
-                          <i className="bi bi-check-circle-fill text-success me-2" />
-                          <strong>Áreas urbanas</strong> muestran 25% mayor participación
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="col-md-6">
-                      <ul className="list-unstyled">
-                        <li className="mb-2">
-                          <i className="bi bi-exclamation-triangle-fill text-warning me-2" />
-                          <strong>Grupo 18-25 años</strong> con participación 15% inferior al esperado
-                        </li>
-                        <li className="mb-2">
-                          <i className="bi bi-info-circle-fill text-info me-2" />
-                          <strong>Margen de error</strong> del modelo: ±3.2%
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }

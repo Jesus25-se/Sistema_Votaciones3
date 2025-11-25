@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Database, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { Database, AlertTriangle, CheckCircle, XCircle, FileText, Calendar, BarChart3 } from "lucide-react";
 import { toast } from "react-toastify";
 
 // --- CONSTANTES DE LOCAL STORAGE ---
@@ -9,7 +9,6 @@ const CLEANED_VOTES_KEY = 'cleanedUploadedVotes';
 // --- TIPOS DE DATOS COMPARTIDOS ---
 type CategoriaVoto = 'presidencial' | 'congreso' | 'parlamento';
 type DatasetType = "partidos" | "resultados"; 
-// 💡 DatasetStatus: Mantenemos el tipo literal
 type DatasetStatus = "pending" | "verified" | "error"; 
 
 export interface VoteRecord {
@@ -34,18 +33,14 @@ export interface PendingDataset {
     type: DatasetType;
     records: number;
     uploadDate: string;
-    status: DatasetStatus; // Usamos el tipo literal
+    status: DatasetStatus;
     rawData: VoteRecord[];
     issues?: DataIssue[];
 }
 
-
 // 💡 UTILITIES para manejo de localStorage (Seguras)
-
-// Función para obtener datasets pendientes de forma segura
 const getPendingDatasets = (): PendingDataset[] => {
     const data = localStorage.getItem(PENDING_DATASETS_KEY);
-    // Aseguramos que siempre devolvemos un array
     try {
         return data ? JSON.parse(data) : [];
     } catch (e) {
@@ -54,15 +49,12 @@ const getPendingDatasets = (): PendingDataset[] => {
     }
 };
 
-// Función para guardar datasets pendientes
 const savePendingDatasets = (datasets: PendingDataset[]) => {
     localStorage.setItem(PENDING_DATASETS_KEY, JSON.stringify(datasets));
 };
 
-// Función para obtener los votos limpios existentes de forma segura
 const getCleanedVotes = (): VoteRecord[] => {
     const data = localStorage.getItem(CLEANED_VOTES_KEY);
-    // Aseguramos que el valor devuelto sea un array, NO null.
     try {
         return data ? JSON.parse(data) : [];
     } catch (e) {
@@ -75,16 +67,12 @@ export default function DataCleaning() {
     const [datasets, setDatasets] = useState<PendingDataset[]>(getPendingDatasets());
     const [isCleaning, setIsCleaning] = useState(false);
 
-    // Cargar los datasets al montar y al recibir el evento 'datasetUploaded'
     useEffect(() => {
         const loadDatasets = () => {
             setDatasets(getPendingDatasets());
         };
 
-        // Escucha el evento disparado desde DataUpload
         window.addEventListener('datasetUploaded', loadDatasets);
-        
-        // Carga inicial
         loadDatasets();
 
         return () => {
@@ -93,20 +81,16 @@ export default function DataCleaning() {
     }, []);
     
 
-    // 🚨 Función para simular la verificación de datos y detectar problemas
     const handleVerifyDataset = (id: string, rawData: VoteRecord[]) => {
         if (isCleaning) return;
         setIsCleaning(true);
         toast.info("Iniciando proceso de verificación de datos...");
 
-        // Simulación: La verificación toma 1.5 segundos
         setTimeout(() => {
-            // 1. Lógica de Simulación de Verificación:
             const issues: DataIssue[] = [];
             const invalidCategories = ["nulo", "error", "blanco"];
             
             rawData.forEach((record, index) => {
-                // Simulación de ERROR: DNI no válido
                 if (!record.DNI || record.DNI.length !== 8) {
                     issues.push({
                         id: `issue-${id}-${index}-dni`,
@@ -115,7 +99,6 @@ export default function DataCleaning() {
                         level: "ERROR",
                     });
                 }
-                // Simulación de WARNING: Votos no válidos (se mantienen pero se advierte)
                 if (invalidCategories.includes(record.partido.toLowerCase())) {
                     issues.push({
                         id: `issue-${id}-${index}-invalid`,
@@ -126,25 +109,20 @@ export default function DataCleaning() {
                 }
             });
 
-            // 2. Actualizar el dataset en el estado y localStorage
             setDatasets(prevDatasets => {
                 const updatedDatasets = prevDatasets.map(d => {
                     if (d.id === id) {
                         if (issues.some(i => i.level === "ERROR")) {
                             toast.error(`Verificación finalizada con ${issues.filter(i => i.level === "ERROR").length} ERRORES en el dataset: ${d.name}`);
-                            // 🛑 CORRECCIÓN: Usamos 'as PendingDataset' para mantener el tipo literal 'DatasetStatus'
                             return { ...d, status: "error", issues } as PendingDataset; 
                         }
                         
-                        // Si solo hay WARNINGS o es limpio
                         toast.success(`Verificación COMPLETA. Listo para aplicar. Dataset: ${d.name}`);
-                        // 🛑 CORRECCIÓN: Usamos 'as PendingDataset' para mantener el tipo literal 'DatasetStatus'
                         return { ...d, status: "verified", issues } as PendingDataset;
                     }
                     return d;
                 });
                 
-                // 🛑 CORRECCIÓN: Aunque el error se da en el map, aseguramos el tipo en la función de utilidad también.
                 savePendingDatasets(updatedDatasets as PendingDataset[]); 
                 return updatedDatasets as PendingDataset[];
             });
@@ -153,43 +131,31 @@ export default function DataCleaning() {
         }, 1500);
     };
 
-    // 🚨 Función para aplicar el dataset limpio al sistema de votación (CLEANED_VOTES_KEY)
     const handleApplyDataset = (datasetId: string, rawData: VoteRecord[]) => {
         if (isCleaning) return;
         setIsCleaning(true);
         toast.info("Aplicando dataset al sistema de resultados...");
         
-        // Simulación: La aplicación toma 1 segundo
         setTimeout(() => {
-            // 1. Obtener los votos limpios existentes de forma segura
             const existingCleanedVotes = getCleanedVotes();
-            
-            // 2. Fusionar los nuevos datos 
             const validDataToApply = rawData.filter(r => r.DNI && r.DNI.length === 8) as VoteRecord[];
-            
             const mergedData = [...existingCleanedVotes, ...validDataToApply]; 
 
-            // 3. Guardar los datos fusionados
             localStorage.setItem(CLEANED_VOTES_KEY, JSON.stringify(mergedData));
 
-            // 4. Eliminar el dataset de la lista de pendientes
             setDatasets(prevDatasets => {
                 const updatedDatasets = prevDatasets.filter(d => d.id !== datasetId);
                 savePendingDatasets(updatedDatasets);
                 return updatedDatasets;
             });
             
-            // 5. 🚀 DISPARAR EVENTO DE ACTUALIZACIÓN: Notifica al AdminDashboard
             window.dispatchEvent(new Event('cleanedDataApplied'));
-            
             toast.success("Dataset aplicado con éxito. Resultados actualizados.");
             setIsCleaning(false);
 
         }, 1000);
     };
 
-
-    // Filtramos los datasets que están pendientes de una acción (no los que ya fallaron)
     const activeDatasets = useMemo(() => 
         datasets.filter(d => d.status !== 'error')
     , [datasets]);
@@ -200,147 +166,285 @@ export default function DataCleaning() {
 
     
     return (
-        <div className="container mt-5" style={{ maxWidth: 1000 }}>
-            <h2 className="fw-bold mb-4 text-dark d-flex align-items-center">
-                <Database className="me-3 text-primary" size={30} />
-                Procesamiento y Limpieza de Datos
-            </h2>
-            <p className="text-muted mb-4">
-                Gestione los datasets de resultados subidos. Verifique su integridad antes de aplicarlos a los resultados electorales oficiales.
-            </p>
-            
-            {/* --- SECCIÓN DE DATASETS CON ERRORES --- */}
-            {errorDatasets.length > 0 && (
-                <div className="card border-danger shadow-sm mb-4">
-                    <div className="card-header bg-danger text-white fw-bold">
-                        <XCircle size={18} className="me-2" />
-                        Datasets con Errores Críticos ({errorDatasets.length})
+        <div className="container-fluid py-4 bg-light min-vh-100">
+            <div className="container" style={{ maxWidth: 1200 }}>
+                {/* Header */}
+                <div className="row align-items-center mb-4">
+                    <div className="col">
+                        <h1 className="h2 fw-bold text-dark mb-2 d-flex align-items-center">
+                            <Database className="me-3 text-primary" size={32} />
+                            Procesamiento de Datos Electorales
+                        </h1>
+                        <p className="text-muted mb-0">
+                            Verifique y aplique datasets de resultados al sistema electoral oficial
+                        </p>
                     </div>
-                    <ul className="list-group list-group-flush small">
-                        {errorDatasets.map((dataset) => (
-                            <li key={dataset.id} className="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span className="fw-semibold">{dataset.name}</span>
-                                    <p className="text-muted mb-0 small">
-                                        <AlertTriangle size={14} className="text-danger me-1" />
-                                        Errores detectados en la verificación. Registros: {dataset.records}
-                                    </p>
-                                </div>
-                                <div className="text-end">
-                                    <button 
-                                        className="btn btn-sm btn-danger-subtle me-2"
-                                        onClick={() => {
-                                            const errorList = dataset.issues?.filter(i => i.level === 'ERROR').map(i => `- ${i.description}`).join('\n') || 'No se encontraron detalles de error.';
-                                            alert(`Detalle de Errores Críticos en ${dataset.name}:\n\n${errorList}`);
-                                        }}
-                                    >
-                                        Ver Errores
-                                    </button>
-                                    <button 
-                                        className="btn btn-sm btn-outline-secondary"
-                                        onClick={() => {
-                                            // Lógica para remover el dataset (se debe implementar una función de utilidad)
-                                            if (window.confirm(`¿Está seguro que desea eliminar el dataset con errores ${dataset.name}?`)) {
-                                                setDatasets(prev => {
-                                                    const filtered = prev.filter(d => d.id !== dataset.id);
-                                                    savePendingDatasets(filtered);
-                                                    return filtered;
-                                                });
-                                                toast.warning(`Dataset '${dataset.name}' eliminado de la lista.`);
-                                            }
-                                        }}
-                                        disabled={isCleaning}
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            
-            {/* --- SECCIÓN DE DATASETS ACTIVOS (PENDIENTES/VERIFICADOS) --- */}
-            <div className="card border-0 shadow-sm rounded-3">
-                <div className="card-header bg-primary bg-opacity-10 py-3">
-                    <h5 className="fw-bold mb-0 text-primary" style={{ fontSize: '1.1rem' }}>
-                        Datasets Pendientes de Aplicación ({activeDatasets.length})
-                    </h5>
-                </div>
-                
-                {activeDatasets.length > 0 ? (
-                    <div className="table-responsive">
-                        <table className="table table-hover mb-0">
-                            <thead className="table-light">
-                                <tr className="small text-muted text-uppercase">
-                                    <th>Nombre del Archivo</th>
-                                    <th>Registros</th>
-                                    <th>Subida</th>
-                                    <th>Estado</th>
-                                    <th className="text-end">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {activeDatasets.map((dataset) => (
-                                    <tr key={dataset.id}>
-                                        <td className="fw-semibold" style={{ verticalAlign: 'middle' }}>{dataset.name}</td>
-                                        <td style={{ verticalAlign: 'middle' }}>{dataset.records.toLocaleString()}</td>
-                                        <td style={{ verticalAlign: 'middle' }}>
-                                            {new Date(dataset.uploadDate).toLocaleDateString()}
-                                        </td>
-                                        <td style={{ verticalAlign: 'middle' }}>
-                                            <span className={`badge ${
-                                                dataset.status === 'pending' ? 'bg-warning text-dark' : 
-                                                dataset.status === 'verified' ? 'bg-success' : 'bg-danger'
-                                            }`}>
-                                                {dataset.status === 'pending' ? 'Pendiente' : 
-                                                 dataset.status === 'verified' ? 'Verificado' : 'Error'}
-                                            </span>
-                                            {dataset.issues && dataset.issues.length > 0 && dataset.status === 'verified' && (
-                                                <small className="d-block text-muted">
-                                                    <AlertTriangle size={12} className="text-warning me-1" />
-                                                    {dataset.issues.filter(i => i.level === 'WARNING').length} advertencias
-                                                </small>
-                                            )}
-                                        </td>
-                                        <td className="text-end" style={{ verticalAlign: 'middle' }}>
-                                            {/* Botón de Verificar (Solo si está pendiente) */}
-                                            {dataset.status === 'pending' && (
-                                                <button
-                                                    className="btn btn-sm btn-primary me-2"
-                                                    onClick={() => handleVerifyDataset(dataset.id, dataset.rawData)}
-                                                    disabled={isCleaning}
-                                                >
-                                                    {isCleaning ? 'Verificando...' : 'Verificar Data'}
-                                                </button>
-                                            )}
-                                            {/* Botón de Aplicar (Solo si está verificado) */}
-                                            {dataset.status === 'verified' && (
-                                                <button
-                                                    className="btn btn-sm btn-success"
-                                                    onClick={() => handleApplyDataset(dataset.id, dataset.rawData)}
-                                                    disabled={isCleaning}
-                                                >
-                                                    {isCleaning ? 'Aplicando...' : 'Aplicar al Sistema'}
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="col-auto">
+                        <div className="bg-primary bg-opacity-10 px-3 py-2 rounded-3">
+                            <span className="text-primary fw-semibold">
+                                <BarChart3 size={16} className="me-2" />
+                                {datasets.length} datasets en cola
+                            </span>
+                        </div>
                     </div>
-                ) : (
-                    <p className="text-center text-muted py-5 mb-0">
-                        <CheckCircle size={30} className="me-2 text-success" />
-                        No hay datasets pendientes de aplicar.
-                    </p>
+                </div>
+
+                {/* Stats Cards */}
+                <div className="row g-3 mb-4">
+                    <div className="col-md-4">
+                        <div className="card border-0 shadow-sm h-100">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <div className="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                                        <FileText size={24} className="text-primary" />
+                                    </div>
+                                    <div>
+                                        <h3 className="fw-bold text-dark mb-0">{activeDatasets.length}</h3>
+                                        <p className="text-muted mb-0 small">Pendientes de aplicar</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="card border-0 shadow-sm h-100">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <div className="bg-warning bg-opacity-10 p-3 rounded-3 me-3">
+                                        <AlertTriangle size={24} className="text-warning" />
+                                    </div>
+                                    <div>
+                                        <h3 className="fw-bold text-dark mb-0">{errorDatasets.length}</h3>
+                                        <p className="text-muted mb-0 small">Con errores críticos</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="card border-0 shadow-sm h-100">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <div className="bg-success bg-opacity-10 p-3 rounded-3 me-3">
+                                        <CheckCircle size={24} className="text-success" />
+                                    </div>
+                                    <div>
+                                        <h3 className="fw-bold text-dark mb-0">
+                                            {activeDatasets.filter(d => d.status === 'verified').length}
+                                        </h3>
+                                        <p className="text-muted mb-0 small">Verificados y listos</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Error Datasets Section */}
+                {errorDatasets.length > 0 && (
+                    <div className="card border-danger shadow-sm mb-4">
+                        <div className="card-header bg-danger text-white py-3 d-flex align-items-center">
+                            <XCircle size={20} className="me-2" />
+                            <h5 className="fw-bold mb-0">Datasets con Errores Críticos</h5>
+                            <span className="badge bg-light text-danger ms-2">{errorDatasets.length}</span>
+                        </div>
+                        <div className="card-body p-0">
+                            <div className="table-responsive">
+                                <table className="table table-hover mb-0">
+                                    <thead className="table-light">
+                                        <tr>
+                                            <th className="ps-4">Dataset</th>
+                                            <th>Registros</th>
+                                            <th>Fecha</th>
+                                            <th>Problemas</th>
+                                            <th className="text-end pe-4">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {errorDatasets.map((dataset) => (
+                                            <tr key={dataset.id} className="border-bottom">
+                                                <td className="ps-4">
+                                                    <div className="d-flex align-items-center">
+                                                        <FileText size={16} className="text-danger me-2" />
+                                                        <div>
+                                                            <div className="fw-semibold text-dark">{dataset.name}</div>
+                                                            <small className="text-muted">Tipo: {dataset.type}</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span className="fw-semibold">{dataset.records.toLocaleString()}</span>
+                                                </td>
+                                                <td>
+                                                    <div className="d-flex align-items-center">
+                                                        <Calendar size={14} className="text-muted me-2" />
+                                                        <small>{new Date(dataset.uploadDate).toLocaleDateString()}</small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span className="badge bg-danger bg-opacity-10 text-danger">
+                                                        {dataset.issues?.filter(i => i.level === 'ERROR').length || 0} errores
+                                                    </span>
+                                                </td>
+                                                <td className="text-end pe-4">
+                                                    <div className="d-flex gap-2 justify-content-end">
+                                                        <button 
+                                                            className="btn btn-sm btn-outline-danger"
+                                                            onClick={() => {
+                                                                const errorList = dataset.issues?.filter(i => i.level === 'ERROR').map(i => `• ${i.description}`).join('\n') || 'No se encontraron detalles de error.';
+                                                                alert(`Detalle de Errores en ${dataset.name}:\n\n${errorList}`);
+                                                            }}
+                                                        >
+                                                            Ver Detalles
+                                                        </button>
+                                                        <button 
+                                                            className="btn btn-sm btn-outline-secondary"
+                                                            onClick={() => {
+                                                                if (window.confirm(`¿Está seguro que desea eliminar el dataset "${dataset.name}"?`)) {
+                                                                    setDatasets(prev => {
+                                                                        const filtered = prev.filter(d => d.id !== dataset.id);
+                                                                        savePendingDatasets(filtered);
+                                                                        return filtered;
+                                                                    });
+                                                                    toast.warning(`Dataset '${dataset.name}' eliminado.`);
+                                                                }
+                                                            }}
+                                                            disabled={isCleaning}
+                                                        >
+                                                            Eliminar
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 )}
+                
+                {/* Active Datasets Section */}
+                <div className="card border-0 shadow-sm rounded-3">
+                    <div className="card-header bg-white border-0 py-4">
+                        <h5 className="fw-bold mb-0 text-dark d-flex align-items-center">
+                            <Database className="me-2 text-primary" size={20} />
+                            Datasets Pendientes de Aplicación
+                            <span className="badge bg-primary ms-2">{activeDatasets.length}</span>
+                        </h5>
+                    </div>
+                    
+                    {activeDatasets.length > 0 ? (
+                        <div className="card-body p-0">
+                            <div className="table-responsive">
+                                <table className="table table-hover mb-0">
+                                    <thead className="table-light">
+                                        <tr>
+                                            <th className="ps-4">Dataset</th>
+                                            <th>Registros</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                            <th className="text-end pe-4">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {activeDatasets.map((dataset) => (
+                                            <tr key={dataset.id} className="border-bottom">
+                                                <td className="ps-4">
+                                                    <div className="d-flex align-items-center">
+                                                        <FileText size={16} className="text-primary me-2" />
+                                                        <div>
+                                                            <div className="fw-semibold text-dark">{dataset.name}</div>
+                                                            <small className="text-muted">Tipo: {dataset.type}</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span className="fw-semibold text-dark">{dataset.records.toLocaleString()}</span>
+                                                </td>
+                                                <td>
+                                                    <div className="d-flex align-items-center">
+                                                        <Calendar size={14} className="text-muted me-2" />
+                                                        <small>{new Date(dataset.uploadDate).toLocaleDateString()}</small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="d-flex flex-column">
+                                                        <span className={`badge ${
+                                                            dataset.status === 'pending' ? 'bg-warning text-dark' : 
+                                                            'bg-success'
+                                                        } mb-1`}>
+                                                            {dataset.status === 'pending' ? 'Pendiente' : 'Verificado'}
+                                                        </span>
+                                                        {dataset.issues && dataset.issues.length > 0 && dataset.status === 'verified' && (
+                                                            <small className="text-warning d-flex align-items-center">
+                                                                <AlertTriangle size={12} className="me-1" />
+                                                                {dataset.issues.filter(i => i.level === 'WARNING').length} advertencias
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="text-end pe-4">
+                                                    <div className="d-flex gap-2 justify-content-end">
+                                                        {dataset.status === 'pending' && (
+                                                            <button
+                                                                className="btn btn-sm btn-primary px-3"
+                                                                onClick={() => handleVerifyDataset(dataset.id, dataset.rawData)}
+                                                                disabled={isCleaning}
+                                                            >
+                                                                {isCleaning ? (
+                                                                    <>
+                                                                        <div className="spinner-border spinner-border-sm me-2" role="status"></div>
+                                                                        Verificando...
+                                                                    </>
+                                                                ) : (
+                                                                    'Verificar Data'
+                                                                )}
+                                                            </button>
+                                                        )}
+                                                        {dataset.status === 'verified' && (
+                                                            <button
+                                                                className="btn btn-sm btn-success px-3"
+                                                                onClick={() => handleApplyDataset(dataset.id, dataset.rawData)}
+                                                                disabled={isCleaning}
+                                                            >
+                                                                {isCleaning ? (
+                                                                    <>
+                                                                        <div className="spinner-border spinner-border-sm me-2" role="status"></div>
+                                                                        Aplicando...
+                                                                    </>
+                                                                ) : (
+                                                                    'Aplicar al Sistema'
+                                                                )}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="card-body text-center py-5">
+                            <CheckCircle size={48} className="text-success mb-3" />
+                            <h5 className="text-muted mb-2">No hay datasets pendientes</h5>
+                            <p className="text-muted mb-0">Todos los datasets han sido procesados o aplicados al sistema.</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer Note */}
+                <div className="mt-4 p-3 bg-light rounded-3 border">
+                    <div className="d-flex align-items-center">
+                        <AlertTriangle size={16} className="text-warning me-2" />
+                        <small className="text-muted">
+                            <strong>Nota:</strong> Los datasets con errores críticos deben ser corregidos antes de poder aplicarse al sistema.
+                        </small>
+                    </div>
+                </div>
             </div>
-            <p className="text-muted small mt-3">
-                <AlertTriangle size={14} className="text-warning me-1" />
-                Los datasets con errores se muestran en la parte superior y no pueden ser aplicados.
-            </p>
         </div>
     );
 }

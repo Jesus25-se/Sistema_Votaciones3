@@ -109,6 +109,7 @@ const loadVotesFromStorage = (key: string): Voto[] => {
     }
 };
 
+
 /**
  * Calcula todos los resultados clave a partir de la lista de votos. (Función pura)
  */
